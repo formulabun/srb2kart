@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"GoBun/functional/strings"
+	"go.formulabun.club/functional/strings"
 )
 
 var GetServerInfoPacket = [...]byte{

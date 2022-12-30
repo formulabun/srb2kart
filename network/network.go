@@ -5,7 +5,7 @@ import (
 	"net"
 	"time"
 
-	"GoBun/srb2kart/network/info"
+	"go.formulabun.club/srb2kart/network/info"
 )
 
 

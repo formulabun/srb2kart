@@ -8,8 +8,8 @@ import (
 	"io"
 	"time"
 
-	"GoBun/functional/array"
-	"GoBun/functional/strings"
+	"go.formulabun.club/functional/array"
+	"go.formulabun.club/functional/strings"
 )
 
 var demoHeader = "KartReplay"
