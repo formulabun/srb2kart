@@ -45,9 +45,9 @@ func ReadReplay(data io.Reader) (result ReplayRaw, err error) {
 	result.HeaderPostFileEntries = headerPostReplays
 
 	cvarCount := int(result.CVarCount)
+  result.CVarEntries = make([]CVarEntry, cvarCount)
 	readCount = 0
 	for readCount < cvarCount {
-		result.CVarEntries = make([]CVarEntry, cvarCount)
 		entry, err := readCVarEntry(data)
 		if err != nil {
 			return result, fmt.Errorf("Could not read cvar entry number %d: %s", readCount+1, err)
@@ -204,7 +204,7 @@ func readNullTerminatedString(data io.Reader, bufferSize int) (string, []byte, e
 		found := array.FindFirstIndexMatching(buffer, 0x00)
 		if found >= 0 {
 			result.Write(buffer[:found+1])
-			return result.String(), buffer[found+1:], nil
+			return result.String(), buffer[found:], nil
 		}
 		result.Write(buffer)
 	}

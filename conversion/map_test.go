@@ -8,6 +8,7 @@ func TestMapIdToNumber(t *testing.T) {
     expected uint
     err error
   }{
+    {"1", 1, nil},
     {"01", 1, nil},
     {"30", 30, nil},
     {"E4", 248, nil},

@@ -13,7 +13,11 @@ var MapIdIncorrectFormat = errors.New("Map id is incorrectly formatted")
 
 // see http://wiki.srb2.org/wiki/Extended_map_number
 func MapIdToNumber(id string) (uint, error) {
-	if len(id) != 2 {
+	l := len(id)
+	switch {
+	case l == 1:
+		id = fmt.Sprintf("%s%s", "0", id)
+	case l > 2:
 		return 0, MapIdIncorrectFormat
 	}
 	var x, y byte

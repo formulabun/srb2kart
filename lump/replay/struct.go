@@ -42,7 +42,7 @@ type HeaderPostFileEntries struct {
 	Seed     uint32
 	Reserved uint32
 
-	CVarCount int16
+	CVarCount uint16
 }
 
 type CVarEntries []CVarEntry
