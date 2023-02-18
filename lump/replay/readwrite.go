@@ -132,7 +132,7 @@ func readCVarEntry(data io.Reader) (result CVarEntry, err error) {
 		return result, fmt.Errorf("Could not read CVar ID: %s", err)
 	}
 
-	cvarValue, extra, err := readNullTerminatedString(data, 2)
+	cvarValue, extra, err := readNullTerminatedString(data, 1)
 	if err != nil {
 		return result, err
 	}
@@ -203,8 +203,8 @@ func readNullTerminatedString(data io.Reader, bufferSize int) (string, []byte, e
 
 		found := array.FindFirstIndexMatching(buffer, 0x00)
 		if found >= 0 {
-			result.Write(buffer[:found+1])
-			return result.String(), buffer[found:], nil
+			result.Write(buffer[:found])
+			return result.String(), buffer[found+1:], nil
 		}
 		result.Write(buffer)
 	}
