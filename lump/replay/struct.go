@@ -3,6 +3,7 @@ package replay
 type ReplayRaw struct {
 	HeaderPreFileEntries
 	WadEntries
+  RecordAttackTimes
 	HeaderPostFileEntries
 	CVarEntries
 	PlayerEntries
@@ -35,10 +36,12 @@ type WadEntry struct {
 	WadMd5   [16]byte
 }
 
-type HeaderPostFileEntries struct {
+type RecordAttackTimes struct {
 	Time uint32
 	Lap  uint32
+}
 
+type HeaderPostFileEntries struct {
 	Seed     uint32
 	Reserved uint32
 
