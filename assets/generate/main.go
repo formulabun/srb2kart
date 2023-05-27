@@ -2,12 +2,12 @@ package main
 
 import (
 	"bytes"
-	"encoding/binary"
 	"log"
 	"os"
 	"text/template"
 
 	"go.formulabun.club/functional/strings"
+	"go.formulabun.club/srb2kart/lump/palette"
 	"go.formulabun.club/srb2kart/wad"
 )
 
@@ -25,14 +25,14 @@ func generatePlayPalPalette(lump []byte) {
 	}
 
 	buff := bytes.NewBuffer(lump)
-	err := binary.Read(buff, binary.LittleEndian, &rawData)
+	palette, err := palette.Convert(buff)
 	handleErr(err)
 
 	templ, err := template.New("PLAYPAL").Parse(playPalTemplate)
 	handleErr(err)
 	outFile, err := os.OpenFile("playpal.go", os.O_RDWR|os.O_CREATE, 0644)
 	handleErr(err)
-	err = templ.Execute(outFile, rawData)
+	err = templ.Execute(outFile, palette)
 	handleErr(err)
 }
 
