@@ -29,3 +29,19 @@ type PlayerInfo struct {
   Score uint32
   TimeInServer uint16
 }
+
+type FilesNeededNum uint32
+
+type FilesNeeded struct {
+  First uint32
+  Num uint8
+  More uint8
+  Files [915]uint8
+}
+
+type File struct {
+  FileStatus uint8
+  FileSize uint32
+  WadName string
+  Md5Sum [16]byte
+}

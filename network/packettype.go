@@ -1,8 +1,9 @@
 package network
 
+type packettype_t uint8
 // from d_clisrv.h
 const (
-	pt_nothing   uint8 = iota // To send a nop through the network. ^_~
+	pt_nothing   packettype_t = iota // To send a nop through the network. ^_~
 	pt_servercfg              // Server config used in start game
 	// (must stay 1 for backwards compatibility).
 	// This is a positive response to a CLIENTJOIN request.
@@ -39,7 +40,6 @@ const (
 	// allows HSendPacket(* true, *, *) to return false.
 	// In addition this packet can't occupy all the available slots.
 
-	pt_filefragment = pt_canfail // A part of a file.
 
 	pt_textcmd     // Extra text commands from the client.
 	pt_textcmd2    // Splitscreen text commands.
@@ -56,3 +56,4 @@ const (
 	pt_ping // packet sent to tell clients the other client's latency to server.
 	numpackettype
 )
+const pt_filefragment = pt_canfail // A part of a file.
