@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func SendPacket(address string, packetType uint8, packetData any) (*net.UDPConn, error) {
+func OpenConnection(address string) (*net.UDPConn, error) {
 	udpAddr, err := net.ResolveUDPAddr("udp", address)
 	if err != nil {
 		return nil, fmt.Errorf("Could not resolve address %s: %s", address, err)
@@ -22,32 +22,25 @@ func SendPacket(address string, packetType uint8, packetData any) (*net.UDPConn,
 	conn.SetReadBuffer(2048)
 	conn.SetReadDeadline(time.Now().Add(5 * time.Second))
 
+  return conn, nil
+}
+
+func SendPacket(address string, packetType packettype_t, packetData any) (*net.UDPConn, error) {
+  conn, err := OpenConnection(address)
+  if err != nil {
+    return nil, fmt.Errorf("Could not open socket for sending a packet: %s", err)
+  }
+
 	err = SendPacketOnConnection(conn, packetType, packetData)
 
 	return conn, err
 }
 
-func SendPacketOnConnection(conn *net.UDPConn, packetType uint8, packetData any) error {
+func SendPacketOnConnection(conn *net.UDPConn, packetType packettype_t, packetData any) error {
 	packet := makeHeader(packetType, packetData)
 	var err error
 	var buff bytes.Buffer
-	err = binary.Write(&buff, binary.LittleEndian, packet.checksum)
-	if err != nil {
-		return err
-	}
-	err = binary.Write(&buff, binary.LittleEndian, packet.ack)
-	if err != nil {
-		return err
-	}
-	err = binary.Write(&buff, binary.LittleEndian, packet.ackreturn)
-	if err != nil {
-		return err
-	}
-	err = binary.Write(&buff, binary.LittleEndian, packet.packettype)
-	if err != nil {
-		return err
-	}
-	err = binary.Write(&buff, binary.LittleEndian, packet.reserved)
+	err = binary.Write(&buff, binary.LittleEndian, packet)
 	if err != nil {
 		return err
 	}
@@ -67,25 +60,9 @@ func ReadHeader(conn *net.UDPConn, data []byte) (h header, err error) {
   }
 
   buf := bytes.NewBuffer(bs)
-	err = binary.Read(buf, binary.LittleEndian, &h.checksum)
+	err = binary.Read(buf, binary.LittleEndian, &h)
 	if err != nil {
-		return h, fmt.Errorf("Could not read checksum from connection: %s", err)
-	}
-	err = binary.Read(buf, binary.LittleEndian, &h.ack)
-	if err != nil {
-		return h, fmt.Errorf("Could not read ack from connection: %s", err)
-	}
-	err = binary.Read(buf, binary.LittleEndian, &h.ackreturn)
-	if err != nil {
-		return h, fmt.Errorf("Could not read ack return from connection: %s", err)
-	}
-	err = binary.Read(buf, binary.LittleEndian, &h.packettype)
-	if err != nil {
-		return h, fmt.Errorf("Could not read packet type from connection: %s", err)
-	}
-	err = binary.Read(buf, binary.LittleEndian, &h.reserved)
-	if err != nil {
-		return h, fmt.Errorf("Could not read reserved byte from connection: %s", err)
+		return h, fmt.Errorf("Could not read header from connection: %s", err)
 	}
   buf.Read(data)
 	return

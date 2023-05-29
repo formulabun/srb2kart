@@ -5,16 +5,16 @@ import (
 )
 
 type header struct {
-	checksum   uint32
-	ack        uint8
-	ackreturn  uint8
-	packettype uint8
-	reserved   uint8
+	Checksum   uint32
+	Ack        uint8
+	AckReturn  uint8
+	PacketType packettype_t
+	Reserved   uint8
 }
 
 type checksumCalculator struct {
 	checksum uint32
-	offset   uint32
+	term     int
 }
 
 func newChecksumCalculator() *checksumCalculator {
@@ -22,27 +22,20 @@ func newChecksumCalculator() *checksumCalculator {
 }
 
 func (c *checksumCalculator) Write(data []byte) (n int, err error) {
-	for _, d := range data {
-		c.checksum += uint32(d) * c.offset
-		c.offset += 1
+	var skip = 0
+	// if term is the initial value, we skip the checksum of the header
+	if c.term == 1 {
+		skip = 4
+	}
+	for _, d := range data[skip:] {
+		c.checksum += uint32(d) * uint32(c.term)
+		c.term += 1
 	}
 	return len(data), nil
 }
 
 func (c *checksumCalculator) setChecksum(h *header, data any) {
-	err := binary.Write(c, binary.LittleEndian, h.ack)
-	if err != nil {
-		panic(err)
-	}
-	err = binary.Write(c, binary.LittleEndian, h.ackreturn)
-	if err != nil {
-		panic(err)
-	}
-	err = binary.Write(c, binary.LittleEndian, h.packettype)
-	if err != nil {
-		panic(err)
-	}
-	err = binary.Write(c, binary.LittleEndian, h.reserved)
+	err := binary.Write(c, binary.LittleEndian, h)
 	if err != nil {
 		panic(err)
 	}
@@ -50,10 +43,10 @@ func (c *checksumCalculator) setChecksum(h *header, data any) {
 	if err != nil {
 		panic(err)
 	}
-	h.checksum = c.checksum
+	h.Checksum = c.checksum
 }
 
-func makeHeader(packetType uint8, packetData any) header {
+func makeHeader(packetType packettype_t, packetData any) header {
 	h := header{0, 0, 0, packetType, 0}
 	c := newChecksumCalculator()
 	c.setChecksum(&h, packetData)
