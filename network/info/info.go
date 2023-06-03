@@ -191,7 +191,7 @@ func parseServerInfoPacket(data []byte) (ServerInfoPacket, error) {
 		FileNeededNum:  packetRaw.FileNeededNum,
 		Time:           packetRaw.Time,
 		LevelTime:      packetRaw.LevelTime,
-		ServerNameRaw: strings.NullTerminated(packetRaw.ServerName[:]),
+		ServerNameRaw:  strings.NullTerminated(packetRaw.ServerName[:]),
 		ServerName:     strings.SafeNullTerminated(packetRaw.ServerName[:]),
 		MapName:        strings.SafeNullTerminated(packetRaw.MapName[:]),
 		MapTitle:       strings.SafeNullTerminated(packetRaw.MapTitle[:]),
