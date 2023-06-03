@@ -20,7 +20,7 @@ func handleErr(err error) {
 }
 
 func generatePlayPalPalette(lump []byte) {
-	var rawData [256]struct {
+	var _ [256]struct {
 		R, G, B byte
 	}
 
