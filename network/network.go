@@ -9,6 +9,7 @@ import (
 )
 
 
+// deprecated
 func GetServerInfo(adress string) (info.ServerInfoPacket, info.PlayerInfoPacket, error) {
 	udpAddr, err := net.ResolveUDPAddr("udp", adress)
 	if err != nil {
@@ -27,7 +28,7 @@ func GetServerInfo(adress string) (info.ServerInfoPacket, info.PlayerInfoPacket,
 	var gotPlayerInfoPacket bool
 
 	conn.SetReadBuffer(2048)
-	conn.SetReadDeadline(time.Now().Add(2 * time.Second))
+	conn.SetReadDeadline(time.Now().Add(1 * time.Second))
 	conn.Write(info.GetServerInfoPacket[:])
 	for !gotServerInfoPacket || !gotPlayerInfoPacket {
 		buffer := make([]byte, 2048)

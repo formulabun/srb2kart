@@ -118,7 +118,7 @@ func readWadEntry(data io.Reader) (result WadEntry, err error) {
 
 	n, err := data.Read(result.WadMd5[len(extra):])
 	if err != nil {
-		return result, fmt.Errorf("Could not read a file entry from the replay: ", err)
+		return result, fmt.Errorf("Could not read a file entry from the replay: %s", err)
 	}
 	if n < 16-len(extra) {
 		return result, fmt.Errorf("Unexpected end to the replay file.")
@@ -195,7 +195,7 @@ func readNullTerminatedString(data io.Reader, bufferSize int) (string, []byte, e
 	for {
 		n, err := data.Read(buffer)
 		if err != nil {
-			return result.String(), buffer, fmt.Errorf("Could not read from the replay: ", err)
+			return result.String(), buffer, fmt.Errorf("Could not read from the replay: %s", err)
 		}
 		if n < bufferSize {
 			return result.String(), buffer, fmt.Errorf("Unexpected end to the replay file.")
