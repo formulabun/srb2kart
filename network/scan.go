@@ -6,7 +6,7 @@ import (
 	"encoding/binary"
 )
 
-func ScanFile(data []byte, atEOF bool) (advance int, token []byte, err error) {
+func scanFile(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	if len(data) <= 9 { // too small
 		return 0, nil, nil
 	}
@@ -22,13 +22,13 @@ func ScanFile(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	return term + 16, token, nil
 }
 
-func fileTokenToFile(data []byte) (File, error) {
+func fileTokenToFile(data []byte) (file, error) {
 	checksum := [16]byte{}
 	copy(checksum[:], data[len(data)-16:])
-	return File{
+	return file{
 		uint8(data[0]),
 		binary.LittleEndian.Uint32(data[1:5]),
-		string(data[5 : len(data)-16]),
+		string(data[5 : len(data)-16-1]), // -(checksum size + 1 null byte)
 		checksum,
 	}, nil
 }

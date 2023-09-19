@@ -20,6 +20,9 @@ const (
 )
 
 func GetAddonType(filename string) AddonType {
+	if filename == "bonuschars.kart" {
+		return KartFlag | CharFlag
+	}
 	var result AddonType = 0
 	for _, c := range filename {
 		switch unicode.ToLower(c) {
@@ -65,11 +68,11 @@ func GetAddonVersion(filename string) []uint {
 			digit += uint(v)
 			i++
 		default:
-      if unicode.IsDigit(rune(filename[i-1])) {
-        result = append(result, digit)
-      }
+			if unicode.IsDigit(rune(filename[i-1])) {
+				result = append(result, digit)
+			}
 			digit = 0
-      i++
+			i++
 		}
 	}
 	return result

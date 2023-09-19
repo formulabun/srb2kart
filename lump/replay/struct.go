@@ -3,6 +3,10 @@ package replay
 type ReplayRaw struct {
 	HeaderPreFileEntries
 	WadEntries
+<<<<<<< Updated upstream
+=======
+	RecordAttackTimes
+>>>>>>> Stashed changes
 	HeaderPostFileEntries
 	CVarEntries
 	PlayerEntries
