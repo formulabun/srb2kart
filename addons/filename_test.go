@@ -54,8 +54,8 @@ func TestGetAddonVersion(t *testing.T) {
 		{"KC_JokerCharsPack-v6.1.PLUS.pk3", []uint{6, 1}},
 		{"KC_Linerider-v.1.wad", []uint{1}},
 		{"KC_MLP_Pack_v1a.pk3", []uint{1}}, // man screw letters
-    // {"KC_PlomChars-v1-1b.pk3", []uint{1, 1}}, to wrong
-    {"KC_SDHornet_V1noengine.pk3", []uint{1}},
+		// {"KC_PlomChars-v1-1b.pk3", []uint{1, 1}}, to wrong
+		{"KC_SDHornet_V1noengine.pk3", []uint{1}},
 	}
 
 	for _, d := range testData {

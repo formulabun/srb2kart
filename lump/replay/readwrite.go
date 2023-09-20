@@ -45,7 +45,7 @@ func ReadReplay(data io.Reader) (result ReplayRaw, err error) {
 	result.HeaderPostFileEntries = headerPostReplays
 
 	cvarCount := int(result.CVarCount)
-  result.CVarEntries = make([]CVarEntry, cvarCount)
+	result.CVarEntries = make([]CVarEntry, cvarCount)
 	readCount = 0
 	for readCount < cvarCount {
 		entry, err := readCVarEntry(data)
