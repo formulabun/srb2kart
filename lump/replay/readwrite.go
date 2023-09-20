@@ -37,18 +37,6 @@ func ReadReplay(data io.Reader) (result ReplayRaw, err error) {
 		readCount++
 	}
 
-<<<<<<< Updated upstream
-=======
-	if result.HeaderPreFileEntries.IsRecordReplay() {
-		var recordAttackTimes RecordAttackTimes
-		err = binary.Read(data, binary.LittleEndian, &recordAttackTimes)
-		if err != nil {
-			return result, fmt.Errorf("Could not read record attack times, %s", err)
-		}
-		result.RecordAttackTimes = recordAttackTimes
-	}
-
->>>>>>> Stashed changes
 	var headerPostReplays HeaderPostFileEntries
 	err = binary.Read(data, binary.LittleEndian, &headerPostReplays)
 	if err != nil {
