@@ -4,7 +4,26 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/binary"
+	"fmt"
 )
+
+func scanFiles(response filesNeeded) ([]file, error) {
+	files := make([]file, 0, response.Num)
+	fileScanner := bufio.NewScanner(bytes.NewBuffer(response.Files[:]))
+	fileScanner.Split(scanFile)
+	for i := 0; i < int(response.Num); i++ {
+		if !fileScanner.Scan() {
+			return files, fmt.Errorf("Could not read the next file needed: %s", fileScanner.Err())
+		}
+		f, err := fileTokenToFile(fileScanner.Bytes())
+		if err != nil {
+			return files, fmt.Errorf("Could not read files needed: %s", err)
+		}
+		files = append(files, f)
+	}
+
+	return files, nil
+}
 
 func scanFile(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	if len(data) <= 9 { // too small
@@ -13,7 +32,7 @@ func scanFile(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	if data[0] == 0 {
 		return 0, []byte{}, bufio.ErrFinalToken
 	}
-	term := bytes.Index(data[5:], []byte{0x0}) + 6
+	term := bytes.Index(data[6:], []byte{0x0}) + 6
 	if term < 0 {
 		return 0, nil, nil
 	}

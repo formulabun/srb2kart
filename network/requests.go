@@ -1,7 +1,6 @@
 package network
 
 import (
-	"bufio"
 	"bytes"
 	"encoding/binary"
 	"errors"
@@ -104,19 +103,7 @@ func tellFilesNeeded(conn *net.UDPConn, from int) (filesNeeded, []file, error) {
 		return fmtErr(err)
 	}
 
-	files := make([]file, 0, response.Num)
-	fileScanner := bufio.NewScanner(bytes.NewBuffer(response.Files[:]))
-	fileScanner.Split(scanFile)
-	for i := 0; i < int(response.Num); i++ {
-		if !fileScanner.Scan() {
-			return response, files, fmt.Errorf("Could not read the next file needed: %s", fileScanner.Err())
-		}
-		f, err := fileTokenToFile(fileScanner.Bytes())
-		if err != nil {
-			return response, files, fmt.Errorf("Could not read files needed: %s", err)
-		}
-		files = append(files, f)
-	}
+	files, err := scanFiles(response)
 
-	return response, files, nil
+	return response, files, err
 }
